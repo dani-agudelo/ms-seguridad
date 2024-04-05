@@ -86,7 +86,7 @@ public class JwtService {
     }
   }
 
-  public LocalDateTime getExpirationDateFromToken(String token) {
+  public LocalDateTime getExpiration(String token) {
     Jws<Claims> claimsJws =
         Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token);
 
