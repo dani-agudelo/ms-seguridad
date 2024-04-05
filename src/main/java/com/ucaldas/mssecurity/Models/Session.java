@@ -10,9 +10,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document
 public class Session {
   @Id private String _id;
-  private String code2fa;
   private String token;
-  private Boolean active;
+  private String code2fa;
+  private Boolean active = false;
   private LocalDateTime expiration;
   private LocalDateTime startAt;
   private LocalDateTime endAt;
@@ -20,9 +20,8 @@ public class Session {
 
   public Session() {}
 
-  public Session(String code2fa, Boolean active, User user) {
-    this.token = code2fa;
-    this.active = active;
+  public Session(String code2fa, User user) {
+    this.code2fa = code2fa;
     this.user = user;
   }
 

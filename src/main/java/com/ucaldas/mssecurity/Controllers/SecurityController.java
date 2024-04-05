@@ -28,10 +28,11 @@ public class SecurityController {
 
     if (currentUser != null) {
       String code2fa = this.mfaService.generateCode();
-      Session currentSession = new Session(code2fa, true, currentUser);
+      Session currentSession = new Session(code2fa, currentUser);
       this.sessionRepository.save(currentSession);
       this.mfaService.sendCode(currentUser, code2fa);
       response.setStatus(HttpServletResponse.SC_ACCEPTED);
+      currentUser.setPassword("");
       return currentUser;
     }
 
@@ -49,7 +50,7 @@ public class SecurityController {
       String token = this.jwtService.generateToken(currentUser);
 
       session.setToken(token);
-      session.setExpiration(jwtService.getExpirationDateFromToken(token));
+      session.setExpiration(jwtService.getExpiration(token));
       sessionRepository.save(session);
 
       response.setStatus(HttpServletResponse.SC_ACCEPTED);

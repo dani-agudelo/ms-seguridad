@@ -9,6 +9,7 @@ import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
 import java.security.Key;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -89,9 +90,11 @@ public class JwtService {
     Jws<Claims> claimsJws =
         Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token);
 
-    return new Date(claimsJws.getBody().getExpiration().getTime())
+    return claimsJws
+        .getBody()
+        .getExpiration()
         .toInstant()
-        .atZone(null)
+        .atZone(ZoneId.systemDefault())
         .toLocalDateTime();
   }
 }

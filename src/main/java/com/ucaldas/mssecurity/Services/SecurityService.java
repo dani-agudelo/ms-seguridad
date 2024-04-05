@@ -9,6 +9,9 @@ import java.util.HashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * This class provides security-related services for user validation and two-factor authentication.
+ */
 @Service
 public class SecurityService {
   @Autowired private UserRepository userRepository;
@@ -32,9 +35,9 @@ public class SecurityService {
     Session session = sessionRepository.getSessionByUserAndCode2fa(userId, code2fa);
 
     if (session != null) {
-      session.setActive(false);
+      session.setActive(true);
       session.setStartAt(LocalDateTime.now());
-      session.setEndAt(LocalDateTime.now().plusMinutes(30));
+      session.setEndAt(LocalDateTime.now().plusMinutes(2));
     }
     return session;
   }
