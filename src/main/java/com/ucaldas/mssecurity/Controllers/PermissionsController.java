@@ -1,6 +1,7 @@
 package com.ucaldas.mssecurity.Controllers;
 
 import com.ucaldas.mssecurity.Models.Permission;
+import com.ucaldas.mssecurity.Models.Permission;
 import com.ucaldas.mssecurity.Repositories.PermissionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,17 +17,14 @@ public class PermissionsController {
     private PermissionRepository thePermissionRepository;
 
     @GetMapping("")
-    public List<Permission> findAll() {
+    public List<Permission> findAll(){
         return this.thePermissionRepository.findAll();
     }
-
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public Permission create(@RequestBody Permission theNewPermission) {
+    public Permission create(@RequestBody Permission theNewPermission){
         return this.thePermissionRepository.save(theNewPermission);
     }
-
-    //! por qué no hay update?
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("{id}")

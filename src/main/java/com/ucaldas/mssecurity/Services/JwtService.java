@@ -13,15 +13,14 @@ import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
 @Service
 public class JwtService {
-    @Value("${jwt.secret}") // Esta anotación se utiliza para inyectar el valor de la propiedad jwt.secret en la variable secret. de application.properties
+    @Value("${jwt.secret}")
     private String secret; // Esta es la clave secreta que se utiliza para firmar el token. Debe mantenerse segura.
-    // El valor de la clave secreta se inyecta desde el archivo application.properties
+
     @Value("${jwt.expiration}")
     private Long expiration; // Tiempo de expiración del token en milisegundos.
-    private Key secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS512); 
+    private Key secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS512);
 
     public String generateToken(User theUser) {
         Date now = new Date();
@@ -35,12 +34,11 @@ public class JwtService {
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(theUser.getName())
-                .setIssuedAt(now) // Fecha de emisión del token
-                .setExpiration(expiryDate) // Fecha de expiración del token
-                .signWith(secretKey) 
-                .compact(); 
+                .setIssuedAt(now)
+                .setExpiration(expiryDate)
+                .signWith(secretKey)
+                .compact();
     }
-
     public boolean validateToken(String token) {
         try {
             Jws<Claims> claimsJws = Jwts.parserBuilder()
@@ -50,7 +48,6 @@ public class JwtService {
 
             // Verifica la expiración del token
             Date now = new Date();
-            // Si la expiración del token es anterior a la fecha actual, el token ha expirado
             if (claimsJws.getBody().getExpiration().before(now)) {
                 return false;
             }

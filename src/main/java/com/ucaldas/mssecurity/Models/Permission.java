@@ -6,7 +6,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
 @Document
-
 public class Permission {
     @Id
     private String _id;

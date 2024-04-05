@@ -10,37 +10,19 @@ import java.util.List;
 
 @CrossOrigin
 @RestController
-// Maneja todas las solicitudes que comiencen con /roles
 @RequestMapping("/roles")
 public class RolesController {
-    @Autowired // inyecta la dependencia
+    @Autowired
     private RoleRepository theRoleRepository;
-
-    /**
-     * Maneja las solicitudes GET que se envían a /roles
-     * devuelve una lista de todos los roles en el sistema
-     */
     @GetMapping("")
-    public List<Role> findAll() {
+    public List<Role> findAll(){
         return this.theRoleRepository.findAll();
     }
-
     @ResponseStatus(HttpStatus.CREATED)
-
-    /**
-     * Maneja las solicitudes POST que se envían a /roles
-     * crea un nuevo rol en el sistema con lo que se envía en el cuerpo de la
-     * solicitud
-     */
     @PostMapping
-    public Role create(@RequestBody Role theNewRole) {
+    public Role create(@RequestBody Role theNewRole){
         return this.theRoleRepository.save(theNewRole);
     }
-
-    /**
-     * Maneja las solicitudes GET que se envían a /roles/{id}
-     * devuelve el rol con el id especificado
-     */
     @GetMapping("{id}")
     public Role findById(@PathVariable String id) {
         Role theRole = this.theRoleRepository
@@ -49,14 +31,8 @@ public class RolesController {
         return theRole;
     }
 
-    /**
-     * Maneja las solicitudes PUT que se envían a /roles/{id}
-     * actualiza el rol con el id especificado con lo que se envía en el cuerpo de
-     * la solicitud
-     */
     @PutMapping("{id}")
     public Role update(@PathVariable String id, @RequestBody Role theNewRole) {
-        // busca el rol con el id especificado
         Role theActualRole = this.theRoleRepository
                 .findById(id)
                 .orElse(null);
@@ -70,10 +46,7 @@ public class RolesController {
         }
     }
 
-    /**
-     * Maneja las solicitudes DELETE que se envían a /roles/{id}
-     * elimina el rol con el id especificado
-     */
+
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("{id}")
     public void delete(@PathVariable String id) {
