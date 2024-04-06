@@ -20,13 +20,12 @@ public class SecurityService {
 
   public User validateUser(User user) {
     User currentUser = this.userRepository.getUserByEmail(user.getEmail());
-    boolean isPaswordCorrect =
-        currentUser.getPassword().equals(this.encryptionService.convertSHA256(user.getPassword()));
-
-    if (currentUser != null && isPaswordCorrect) {
-      return currentUser;
-    }
-    return null;
+    boolean isvalid =
+        currentUser != null
+            && currentUser
+                .getPassword()
+                .equals(this.encryptionService.convertSHA256(user.getPassword()));
+    return isvalid ? currentUser : null;
   }
 
   public Session validateCode2fa(HashMap<String, String> credentials) {

@@ -30,7 +30,7 @@ public class SecurityController {
       String code2fa = this.mfaService.generateCode();
       Session currentSession = new Session(code2fa, currentUser);
       this.sessionRepository.save(currentSession);
-      this.mfaService.sendCode(currentUser, code2fa);
+      this.mfaService.sendCodeByEmail(currentUser, code2fa);
       response.setStatus(HttpServletResponse.SC_ACCEPTED);
       currentUser.setPassword("");
       return currentUser;
@@ -59,5 +59,15 @@ public class SecurityController {
 
     response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
     return "";
+  }
+
+  @PostMapping("users/{userId}/verify-2fa/{code2fa}")
+  public String verify2fa(
+      @PathVariable String userId, @PathVariable String code2fa, final HttpServletResponse response)
+      throws IOException {
+    HashMap<String, String> credentials = new HashMap<>();
+    credentials.put("userId", userId);
+    credentials.put("code2fa", code2fa);
+    return this.verify2fa(credentials, response);
   }
 }
