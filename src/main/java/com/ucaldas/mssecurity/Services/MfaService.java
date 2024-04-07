@@ -38,7 +38,6 @@ public class MfaService {
   public void sendCodeByEmail(User user, String code) {
     var body = new HashMap<String, String>();
     mfaVerifyUrl = mfaVerifyUrl.replace("{userId}", user.get_id()).replace("{code2fa}", code);
-    body.put("userId", user.get_id());
     body.put("email", user.getEmail());
     body.put("username", user.getName());
     body.put("verifyUrl", mfaVerifyUrl);

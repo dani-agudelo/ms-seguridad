@@ -4,11 +4,13 @@ import java.util.HashMap;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 /**
  * This class represents a service for sending notifications.
  */
+@Service
 public class NotificationsService {
   private RestTemplate restTemplate = new RestTemplate();
   private HttpHeaders headers = new HttpHeaders();
