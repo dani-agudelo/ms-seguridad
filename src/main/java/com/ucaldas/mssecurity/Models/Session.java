@@ -1,8 +1,7 @@
 package com.ucaldas.mssecurity.Models;
-import lombok.Data;
 
 import java.time.LocalDateTime;
-
+import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -10,77 +9,94 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Data
 @Document
 public class Session {
-    @Id
-    private String _id;
-    private String token;
-    private Boolean active;
-    private LocalDateTime expiration;
-    private LocalDateTime startAt;
-    private LocalDateTime endAt;
-    @DBRef
-    private User user;
+  @Id private String _id;
+  private String token;
+  private String code2fa;
+  private Boolean active = false;
+  private LocalDateTime expiration;
+  private LocalDateTime startAt;
+  private LocalDateTime endAt;
+  @DBRef private User user;
 
-    public Session() {
-    }
+  public Session() {}
 
-    public Session(String token, Boolean active, LocalDateTime expiration, LocalDateTime startAt, LocalDateTime endAt) {
-        this.token = token;
-        this.active = active;
-        this.expiration = expiration;
-        this.startAt = startAt;
-        this.endAt = endAt;
-    }
+  public Session(String code2fa, User user) {
+    this.code2fa = code2fa;
+    this.user = user;
+  }
 
-    public String get_id() {
-        return this._id;
-    }
+  public Session(
+      String code2fa,
+      String token,
+      Boolean active,
+      LocalDateTime expiration,
+      LocalDateTime startAt,
+      LocalDateTime endAt) {
+    this.code2fa = code2fa;
+    this.token = token;
+    this.active = active;
+    this.expiration = expiration;
+    this.startAt = startAt;
+    this.endAt = endAt;
+  }
 
-    public String getToken() {
-        return this.token;
-    }
+  public String get_id() {
+    return this._id;
+  }
 
-    public void setToken(String token) {
-        this.token = token;
-    }
+  public String getCode2fa() {
+    return this.code2fa;
+  }
 
-    public Boolean isActive() {
-        return this.active;
-    }
+  public void setCode2fa(String code2fa) {
+    this.code2fa = code2fa;
+  }
 
-    public void setActive(Boolean active) {
-        this.active = active;
-    }
+  public String getToken() {
+    return this.token;
+  }
 
-    public LocalDateTime getExpiration() {
-        return this.expiration;
-    }
+  public void setToken(String token) {
+    this.token = token;
+  }
 
-    public void setExpiration(LocalDateTime expiration) {
-        this.expiration = expiration;
-    }
+  public Boolean isActive() {
+    return this.active;
+  }
 
-    public LocalDateTime getStartAt() {
-        return this.startAt;
-    }
+  public void setActive(Boolean active) {
+    this.active = active;
+  }
 
-    public void setStartAt(LocalDateTime startAt) {
-        this.startAt = startAt;
-    }
+  public LocalDateTime getExpiration() {
+    return this.expiration;
+  }
 
-    public LocalDateTime getEndAt() {
-        return this.endAt;
-    }
+  public void setExpiration(LocalDateTime expiration) {
+    this.expiration = expiration;
+  }
 
-    public void setEndAt(LocalDateTime endAt) {
-        this.endAt = endAt;
-    }
+  public LocalDateTime getStartAt() {
+    return this.startAt;
+  }
 
-    public User getUser() {
-        return this.user;
-    }
+  public void setStartAt(LocalDateTime startAt) {
+    this.startAt = startAt;
+  }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
-        
+  public LocalDateTime getEndAt() {
+    return this.endAt;
+  }
+
+  public void setEndAt(LocalDateTime endAt) {
+    this.endAt = endAt;
+  }
+
+  public User getUser() {
+    return this.user;
+  }
+
+  public void setUser(User user) {
+    this.user = user;
+  }
 }
