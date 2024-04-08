@@ -1,5 +1,6 @@
 package com.ucaldas.mssecurity.Controllers;
 
+import com.ucaldas.mssecurity.Models.ChangePasswordCredential;
 import com.ucaldas.mssecurity.Models.User;
 import com.ucaldas.mssecurity.Repositories.UserRepository;
 import com.ucaldas.mssecurity.Services.EncryptionService;
@@ -32,5 +33,21 @@ public class SecurityController {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
         }
         return token;
+    }
+
+    /**
+     * Metodo para cambiar la contraseña de un usuario
+     */
+
+    @PostMapping("changePassword")
+    public String changePassword(@RequestBody ChangePasswordCredential newUser, final HttpServletResponse response) throws IOException {
+        User actualUser=this.theUserRepository.getUserByEmail(newUser.getEmail());
+        if(actualUser!=null && actualUser.getPassword().equals(this.theEncryptionService.convertSHA256(newUser.getPassword()))){
+            actualUser.setPassword(this.theEncryptionService.convertSHA256(newUser.getNewPassword()));
+            this.theUserRepository.save(actualUser);
+        }else{
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+        }
+        return "Contraseña cambiada";
     }
 }

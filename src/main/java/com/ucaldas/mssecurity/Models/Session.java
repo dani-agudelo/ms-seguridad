@@ -14,6 +14,8 @@ public class Session {
     private String _id;
     private String token;
     private Boolean active;
+    private Integer codigo2fa;
+    private Boolean estadoCodigo2fa;
     private LocalDateTime expiration;
     private LocalDateTime startAt;
     private LocalDateTime endAt;
