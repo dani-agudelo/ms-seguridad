@@ -3,8 +3,11 @@ package com.ucaldas.mssecurity.Controllers;
 import com.ucaldas.mssecurity.Models.Session;
 import com.ucaldas.mssecurity.Models.User;
 import com.ucaldas.mssecurity.Repositories.SessionRepository;
+import com.ucaldas.mssecurity.Repositories.UserRepository;
+import com.ucaldas.mssecurity.Services.EncryptionService;
 import com.ucaldas.mssecurity.Services.JwtService;
 import com.ucaldas.mssecurity.Services.MfaService;
+import com.ucaldas.mssecurity.Services.NotificationsService;
 import com.ucaldas.mssecurity.Services.SecurityService;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -18,8 +21,12 @@ import org.springframework.web.bind.annotation.*;
 public class SecurityController {
   @Autowired private JwtService jwtService;
   @Autowired private MfaService mfaService;
-  @Autowired private SessionRepository sessionRepository;
   @Autowired private SecurityService securityService;
+  @Autowired private EncryptionService encryptionService;
+  @Autowired private NotificationsService notificationsService;
+
+  @Autowired private SessionRepository sessionRepository;
+  @Autowired private UserRepository userRepository;
 
   @PostMapping("login")
   public User login(@RequestBody User theUser, final HttpServletResponse response)
@@ -30,7 +37,7 @@ public class SecurityController {
       String code2fa = this.mfaService.generateCode();
       Session currentSession = new Session(code2fa, currentUser);
       this.sessionRepository.save(currentSession);
-      this.mfaService.sendCodeByEmail(currentUser, code2fa);
+      this.notificationsService.sendCodeByEmail(currentUser, code2fa);
       response.setStatus(HttpServletResponse.SC_ACCEPTED);
       currentUser.setPassword("");
       return currentUser;
@@ -69,5 +76,24 @@ public class SecurityController {
     credentials.put("userId", userId);
     credentials.put("code2fa", code2fa);
     return this.verify2fa(credentials, response);
+  }
+
+  @PostMapping("password-reset")
+  public User passwordReset(@RequestBody String email, final HttpServletResponse response)
+      throws IOException {
+    User currentUser = this.userRepository.getUserByEmail(email);
+    if (currentUser != null) {
+      String newPassword = this.encryptionService.generatePassword();
+      currentUser.setPassword(this.encryptionService.convertSHA256(newPassword));
+      this.userRepository.save(currentUser);
+      this.notificationsService.sendPasswordResetEmail(currentUser, newPassword);
+      currentUser.setPassword("");
+
+      response.setStatus(HttpServletResponse.SC_ACCEPTED);
+      return currentUser;
+    }
+
+    response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+    return null;
   }
 }

@@ -29,15 +29,23 @@ public class SecurityService {
   }
 
   public Session validateCode2fa(HashMap<String, String> credentials) {
+    if (!credentials.containsKey("userId") || !credentials.containsKey("code2fa")) {
+      return null;
+    }
     String userId = credentials.get("userId");
     String code2fa = credentials.get("code2fa");
-    Session session = sessionRepository.getSessionByUserAndCode2fa(userId, code2fa);
 
-    if (session != null) {
-      session.setActive(true);
-      session.setStartAt(LocalDateTime.now());
-      session.setEndAt(LocalDateTime.now().plusMinutes(2));
+    try {
+      Session session = this.sessionRepository.getSessionByUserAndCode2fa(userId, code2fa);
+
+      if (session != null) {
+        session.setActive(true);
+        session.setStartAt(LocalDateTime.now());
+        session.setEndAt(LocalDateTime.now().plusMinutes(2));
+      }
+      return session;
+    } catch (Exception e) {
+      return null;
     }
-    return session;
   }
 }
