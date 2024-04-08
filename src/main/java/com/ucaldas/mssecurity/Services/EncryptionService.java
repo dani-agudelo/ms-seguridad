@@ -32,11 +32,10 @@ public class EncryptionService {
   /**
    * Generates a random password of the specified length.
    *
-   * @param length the length of the password to generate
    * @return the generated password
    */
   public String generatePassword() {
-    String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     return Stream.generate(() -> (int) (Math.random() * alphabet.length()))
         .limit(8) // 8 digits
         .map(alphabet::charAt)
