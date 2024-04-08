@@ -18,7 +18,10 @@ public class NotificationsService {
   @Value("${mfa.url.verify.code}")
   private String mfaVerifyUrl;
 
-  @Value("${user.url.password.reset}")
+  @Value("${user.url.send.password}")
+  private String passwordUrl;
+
+  @Value("${user.url.reset.password}")
   private String passwordResetUrl;
 
   private RestTemplate restTemplate = new RestTemplate();
@@ -27,13 +30,21 @@ public class NotificationsService {
   /**
    * Sends a notification to the specified URL with the given body.
    *
-   * @param url the URL to send the notification to
+   * @param url  the URL to send the notification to
    * @param body the body of the notification
    */
-  public void send(String url, HashMap<String, String> body) {
+  public boolean send(String url, HashMap<String, String> body) {
+    headers.set("Content-Type", "application/json");
     HttpEntity<HashMap<String, String>> request = new HttpEntity<>(body, headers);
-    ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
-    System.out.println(response.getBody());
+
+    try {
+      ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
+      System.out.println(response.getBody());
+      return true;
+    } catch (Exception e) {
+      System.out.println("Error sending notification: " + e.getMessage());
+      return false;
+    }
   }
 
   /**
@@ -42,7 +53,7 @@ public class NotificationsService {
    * @param user the user to send the code to
    * @param code the generated code
    */
-  public void sendCodeByEmail(User user, String code) {
+  public boolean sendCodeByEmail(User user, String code) {
     var body = new HashMap<String, String>();
     mfaVerifyUrl = mfaVerifyUrl.replace("{userId}", user.get_id()).replace("{code2fa}", code);
     body.put("email", user.getEmail());
@@ -50,21 +61,22 @@ public class NotificationsService {
     body.put("verifyUrl", mfaVerifyUrl);
     body.put("code", code);
 
-    send(mfaUrl, body);
+    return send(mfaUrl, body);
   }
 
   /**
    * Sends the generated code to the specified user's email.
    *
-   * @param user the user to send the code to
+   * @param user        the user to send the code to
    * @param newPassword the generated code
    */
-  public void sendPasswordResetEmail(User user, String newPassword) {
+  public boolean sendPasswordResetEmail(User user, String newPassword) {
     var body = new HashMap<String, String>();
     body.put("email", user.getEmail());
     body.put("username", user.getName());
     body.put("newPassword", newPassword);
-
-    send(passwordResetUrl, body);
+    body.put("resetUrl", passwordResetUrl);
+    
+    return send(passwordUrl, body);
   }
 }

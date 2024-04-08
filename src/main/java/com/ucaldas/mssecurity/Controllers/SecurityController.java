@@ -35,9 +35,16 @@ public class SecurityController {
 
     if (currentUser != null) {
       String code2fa = this.mfaService.generateCode();
+      boolean status = this.notificationsService.sendCodeByEmail(currentUser, code2fa);
+
+      if (!status) {
+        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        return null;
+      }
+
       Session currentSession = new Session(code2fa, currentUser);
       this.sessionRepository.save(currentSession);
-      this.notificationsService.sendCodeByEmail(currentUser, code2fa);
+
       response.setStatus(HttpServletResponse.SC_ACCEPTED);
       currentUser.setPassword("");
       return currentUser;
@@ -79,14 +86,22 @@ public class SecurityController {
   }
 
   @PostMapping("password-reset")
-  public User passwordReset(@RequestBody String email, final HttpServletResponse response)
+  public User passwordReset(
+      @RequestBody HashMap<String, String> credentials, final HttpServletResponse response)
       throws IOException {
-    User currentUser = this.userRepository.getUserByEmail(email);
+    User currentUser = this.userRepository.getUserByEmail(credentials.get("email"));
+
     if (currentUser != null) {
       String newPassword = this.encryptionService.generatePassword();
+      boolean status = this.notificationsService.sendPasswordResetEmail(currentUser, newPassword);
+
+      if (!status) {
+        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        return null;
+      }
+
       currentUser.setPassword(this.encryptionService.convertSHA256(newPassword));
       this.userRepository.save(currentUser);
-      this.notificationsService.sendPasswordResetEmail(currentUser, newPassword);
       currentUser.setPassword("");
 
       response.setStatus(HttpServletResponse.SC_ACCEPTED);
