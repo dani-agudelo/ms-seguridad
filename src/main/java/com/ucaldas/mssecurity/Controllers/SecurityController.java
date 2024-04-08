@@ -20,6 +20,7 @@ public class SecurityController {
     private EncryptionService theEncryptionService;
     @Autowired
     private JwtService theJwtService;
+    
     @PostMapping("login")
     public String login(@RequestBody User theUser, final HttpServletResponse response) throws IOException {
         String token="";

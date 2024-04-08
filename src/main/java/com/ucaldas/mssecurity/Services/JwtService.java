@@ -15,9 +15,9 @@ import java.util.HashMap;
 import java.util.Map;
 @Service
 public class JwtService {
-    @Value("${jwt.secret}")
+    @Value("${jwt.secret}") // Esta anotación se utiliza para inyectar el valor de la propiedad jwt.secret en la variable secret. de application.properties
     private String secret; // Esta es la clave secreta que se utiliza para firmar el token. Debe mantenerse segura.
-
+    // El valor de la clave secreta se inyecta desde el archivo application.properties
     @Value("${jwt.expiration}")
     private Long expiration; // Tiempo de expiración del token en milisegundos.
     private Key secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS512);

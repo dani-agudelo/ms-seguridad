@@ -1,5 +1,7 @@
 package com.ucaldas.mssecurity.Repositories;
 
-public abstract class SessionRepository {
-    
+import com.ucaldas.mssecurity.Models.Session;
+import org.springframework.data.mongodb.repository.MongoRepository;
+
+public interface SessionRepository extends MongoRepository<Session, String> {
 }

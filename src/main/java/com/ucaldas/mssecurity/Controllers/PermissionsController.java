@@ -1,7 +1,6 @@
 package com.ucaldas.mssecurity.Controllers;
 
 import com.ucaldas.mssecurity.Models.Permission;
-import com.ucaldas.mssecurity.Models.Permission;
 import com.ucaldas.mssecurity.Repositories.PermissionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

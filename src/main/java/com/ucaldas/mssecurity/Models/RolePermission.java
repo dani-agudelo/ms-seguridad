@@ -12,10 +12,11 @@ public class RolePermission {
     private String _id;
     @DBRef
     private Role role;
+    @DBRef
     private Permission permission;
 
+    // es un constructor vacío porque id se genera automáticamente y las relaciones se manejan con las anotaciones
     public RolePermission() {
-
     }
 
     public String get_id() {

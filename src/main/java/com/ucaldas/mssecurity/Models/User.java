@@ -15,17 +15,21 @@ public class User {
     private String password;
     @DBRef
     private Role role;
-    public User(){
 
+    public User(){
     }
+
+    // no se pone _id porque la base de datos lo crea automáticamente
     public User(String name, String email, String password) {
         this.name = name;
         this.email = email;
         this.password = password;
     }
+
     public void set_id(String id){
         this._id=id;
     }
+    
     public String get_id() {
         return _id;
     }
