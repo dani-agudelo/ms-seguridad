@@ -81,7 +81,8 @@ public class JwtService {
       return null;
     }
   }
-
+  
+  // Obtiene la fecha de expiración de un token
   public LocalDateTime getExpiration(String token) {
     Jws<Claims> claimsJws =
         Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token);
